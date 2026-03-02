@@ -17,3 +17,7 @@ This project analyzes insurance cost data and builds regression models to predic
 
 ## Deployment
 Interactive Streamlit app included.
+
+## 📸 Application Screenshot
+
+![App Screenshot](app_screenshot.png)
