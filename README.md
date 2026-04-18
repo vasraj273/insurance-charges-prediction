@@ -1,6 +1,7 @@
 # 🏥 Insurance Charges Prediction | Machine Learning Deployment
 
-**Live Application:** [https://insurance-charges-prediction-vasraj273.streamlit.app](https://insurance-charges-prediction-vasraj273.streamlit.app)
+🚀 **Live App:**  
+https://insurance-charges-prediction-vasraj273.streamlit.app
 
 ## 📌 Business Context
 For health insurance companies, accurately forecasting medical costs is critical for pricing premiums and managing risk. This project aims to help insurance underwriters estimate expected healthcare costs for individuals based on their demographic and lifestyle factors. By leveraging machine learning, companies can move away from rigid pricing tables and towards dynamic, risk-adjusted premium pricing.
