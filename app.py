@@ -181,7 +181,7 @@ elif page == "Bulk Prediction":
     st.download_button(
     "📥 Download Sample CSV Template",
     "age,bmi,children,sex,smoker,region\n30,25,1,male,no,northeast",
-    "sample_template.csv"
+    "insurance.csv"
     )
     
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
