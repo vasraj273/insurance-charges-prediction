@@ -15,6 +15,7 @@ model = joblib.load("insurance_model.pkl")
 
 # Load dataset for EDA
 df = pd.read_csv("insurance.csv")
+df["charges"] = df["charges"].replace('[\$,]', '', regex=True).astype(float)
 
 st.set_page_config(page_title="Insurance Charges Prediction App", layout="wide")
 
