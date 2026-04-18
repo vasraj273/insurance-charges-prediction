@@ -104,7 +104,7 @@ elif page == "Predict Charges":
     f"""
     ### 💰 Estimated Insurance Charges
 
-    ## ₹ {prediction[0]:,.2f}
+    ## $ {prediction[0]:,.2f}
     """
     )
 
