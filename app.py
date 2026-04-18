@@ -1,6 +1,9 @@
 import streamlit as st
-st.set_page_config(page_title="Insurance Charges Prediction", layout="wide")
-
+st.set_page_config(
+    page_title="Insurance Charges Prediction",
+    page_icon="💰",
+    layout="wide"
+)
 import joblib
 import numpy as np
 import pandas as pd
@@ -16,7 +19,7 @@ df = pd.read_csv("insurance.csv")
 st.set_page_config(page_title="Insurance Charges Prediction App", layout="wide")
 
 # Sidebar Navigation
-st.sidebar.title("Navigation")
+st.sidebar.title("📊 Navigation")
 page = st.sidebar.radio(
     "Go to",
     ["Overview", "Predict Charges", "EDA Dashboard", "Bulk Prediction"]
@@ -29,7 +32,8 @@ page = st.sidebar.radio(
 if page == "Overview":
 
     st.title("Insurance Charges Prediction App")
-
+    st.markdown("---")
+    
     st.markdown("""
     ### Project Overview
 
@@ -56,6 +60,8 @@ if page == "Overview":
     st.subheader("Dataset Preview")
     st.dataframe(df.head())
 
+    st.subheader("Dataset Shape")
+    st.write(df.shape)
 
 # ===============================
 # Prediction Page
@@ -64,7 +70,8 @@ if page == "Overview":
 elif page == "Predict Charges":
 
     st.title("Predict Insurance Charges")
-
+    st.markdown("---")
+    
     age = st.number_input("Age", 18, 100, 30)
     bmi = st.number_input("BMI", 10.0, 60.0, 25.0)
     children = st.number_input("Number of Dependents", 0, 10, 0)
@@ -93,7 +100,13 @@ elif page == "Predict Charges":
 
         prediction = model.predict(input_data)
 
-        st.success(f"Estimated Insurance Charges: ₹{prediction[0]:,.2f}")
+        st.markdown(
+    f"""
+    ### 💰 Estimated Insurance Charges
+
+    ## ₹ {prediction[0]:,.2f}
+    """
+    )
 
     st.info("Prediction based on trained Random Forest model.")
 
@@ -105,7 +118,8 @@ elif page == "Predict Charges":
 elif page == "EDA Dashboard":
 
     st.title("Exploratory Data Analysis")
-
+    st.markdown("---")
+    
     # First row
     col1, col2 = st.columns(2)
 
@@ -153,7 +167,8 @@ elif page == "EDA Dashboard":
 elif page == "Bulk Prediction":
 
     st.title("Bulk Insurance Charges Prediction")
-
+    st.markdown("---")
+    
     required_columns = [
         "age",
         "bmi",
@@ -163,6 +178,12 @@ elif page == "Bulk Prediction":
         "region"
     ]
 
+    st.download_button(
+    "📥 Download Sample CSV Template",
+    "age,bmi,children,sex,smoker,region\n30,25,1,male,no,northeast",
+    "sample_template.csv"
+    )
+    
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
     if uploaded_file:
@@ -240,3 +261,6 @@ elif page == "Bulk Prediction":
                 "predicted_results.csv",
                 "text/csv"
             )
+
+st.markdown("---")
+st.caption("Developed by Vashisht Rajpurohit | Machine Learning Deployment Project")
