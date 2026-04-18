@@ -6,7 +6,16 @@
 For health insurance companies, accurately forecasting medical costs is critical for pricing premiums and managing risk. This project aims to help insurance underwriters estimate expected healthcare costs for individuals based on their demographic and lifestyle factors. By leveraging machine learning, companies can move away from rigid pricing tables and towards dynamic, risk-adjusted premium pricing.
 
 ## ⚙️ Project Overview
-This repository contains an end-to-end machine learning project. It starts with Exploratory Data Analysis (EDA) and model training in a Jupyter Notebook, and concludes with deploying the best-performing model as an interactive web application using Streamlit.
+## ✨ Features
+
+- Interactive Streamlit web application
+- Manual insurance charge prediction
+- Bulk CSV prediction support (Batch processing)
+- Exploratory Data Analysis (EDA) dashboard
+- Correlation heatmap visualization
+- Dataset relationship insights (Age, BMI, Smoking impact)
+- Clean and responsive dashboard layout
+- Random Forest regression model deployment
 
 ## 📸 Application Screenshots
 
@@ -37,6 +46,17 @@ I experimented with multiple regression models to find the most accurate predict
 ## 💡 Key Analytical Insights
 * **Smoking is the primary driver of cost:** The model strongly identifies smoking as the factor that increases insurance charges the most.
 * **Age & BMI impact:** Costs scale positively with both Age and BMI, especially when combined with the smoking feature.
+
+## ⚙️ Tech Stack
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- Streamlit
+- Joblib
 
 ## 🚀 How to Run the App Locally
 
