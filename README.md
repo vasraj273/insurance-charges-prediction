@@ -8,8 +8,17 @@ For health insurance companies, accurately forecasting medical costs is critical
 ## ⚙️ Project Overview
 This repository contains an end-to-end machine learning project. It starts with Exploratory Data Analysis (EDA) and model training in a Jupyter Notebook, and concludes with deploying the best-performing model as an interactive web application using Streamlit.
 
-## 📸 Application Preview
-[![App Screenshot](app_screenshot.png)](app_screenshot.png)
+## 📸 Application Screenshots
+
+### 🔹 Overview Page
+![Overview](overview.png)
+
+### 🔹 Manual Prediction
+![Manual Prediction](manual_prediction.png)
+
+### 🔹 EDA Dashboard
+![EDA Dashboard](eda_dashboard.png)
+
 
 ## 📊 Model Performance & Selection
 I experimented with multiple regression models to find the most accurate predictor of insurance charges. The **Random Forest Regressor** significantly outperformed both the standard and log-transformed Linear Regression models, capturing non-linear relationships in the data much better.
