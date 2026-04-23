@@ -1,23 +1,21 @@
 import streamlit as st
-st.set_page_config(
-    page_title="Insurance Charges Prediction",
-    page_icon="💰",
-    layout="wide"
-)
 import joblib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+st.set_page_config(
+    page_title="Insurance Charges Prediction",
+    page_icon="💰",
+    layout="wide"
+)
+
 # Load trained model
 model = joblib.load("insurance_model.pkl")
 
 # Load dataset for EDA
 df = pd.read_csv("insurance.csv")
-df["charges"] = df["charges"].replace('[\$,]', '', regex=True).astype(float)
-
-st.set_page_config(page_title="Insurance Charges Prediction App", layout="wide")
 
 # Sidebar Navigation
 st.sidebar.title("📊 Navigation")
@@ -34,28 +32,24 @@ if page == "Overview":
 
     st.title("Insurance Charges Prediction App")
     st.markdown("---")
-    
+
     st.markdown("""
     ### Project Overview
 
-    This application predicts medical insurance charges using a trained **Random Forest Regression model**.
+    This application predicts medical insurance charges using a trained
+    **Random Forest Regression model**.
 
-    The prediction is based on the following input features:
+    The prediction is based on:
 
     - Age
     - BMI
-    - Number of Children
+    - Number of Dependents
     - Gender
     - Smoking Status
-    - Region
 
-    The model was trained using historical insurance dataset and evaluated using:
+    Feature engineering was applied using:
 
-    - MAE
-    - RMSE
-    - R² Score
-
-    This tool helps estimate expected insurance costs quickly and efficiently.
+    BMI × Age interaction feature
     """)
 
     st.subheader("Dataset Preview")
@@ -63,6 +57,7 @@ if page == "Overview":
 
     st.subheader("Dataset Shape")
     st.write(df.shape)
+
 
 # ===============================
 # Prediction Page
@@ -72,44 +67,39 @@ elif page == "Predict Charges":
 
     st.title("Predict Insurance Charges")
     st.markdown("---")
-    
+
     age = st.number_input("Age", 18, 100, 30)
     bmi = st.number_input("BMI", 10.0, 60.0, 25.0)
-    children = st.number_input("Number of Dependents", 0, 10, 0)
+    dependents = st.number_input("Number of Dependents", 0, 10, 0)
 
     sex = st.selectbox("Sex", ["female", "male"])
     smoker = st.selectbox("Smoker", ["no", "yes"])
-    region = st.selectbox(
-        "Region",
-        ["northeast", "northwest", "southeast", "southwest"]
-    )
 
     sex_male = 1 if sex == "male" else 0
     smoker_yes = 1 if smoker == "yes" else 0
 
-    region_northwest = 1 if region == "northwest" else 0
-    region_southeast = 1 if region == "southeast" else 0
-    region_southwest = 1 if region == "southwest" else 0
+    bmi_age = bmi * age
 
-    input_data = np.array([[age, bmi, children,
-                            sex_male, smoker_yes,
-                            region_northwest,
-                            region_southeast,
-                            region_southwest]])
+    input_data = np.array([[
+        age,
+        bmi,
+        dependents,
+        bmi_age,
+        sex_male,
+        smoker_yes
+    ]])
 
     if st.button("Predict Insurance Charges"):
 
         prediction = model.predict(input_data)
 
-        st.markdown(
-    f"""
-    ### 💰 Estimated Insurance Charges
+        st.markdown(f"""
+        ### 💰 Estimated Insurance Charges
 
-    ## $ {prediction[0]:,.2f}
-    """
-    )
+        ## $ {prediction[0]:,.2f}
+        """)
 
-    st.info("Prediction based on trained Random Forest model.")
+        st.info("Prediction based on trained Random Forest model.")
 
 
 # ===============================
@@ -120,8 +110,7 @@ elif page == "EDA Dashboard":
 
     st.title("Exploratory Data Analysis")
     st.markdown("---")
-    
-    # First row
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -136,8 +125,6 @@ elif page == "EDA Dashboard":
         sns.scatterplot(data=df, x="bmi", y="charges", ax=ax)
         st.pyplot(fig)
 
-
-    # Second row
     col3, col4 = st.columns(2)
 
     with col3:
@@ -147,17 +134,16 @@ elif page == "EDA Dashboard":
         st.pyplot(fig)
 
     with col4:
-        st.subheader("Region Distribution")
+        st.subheader("Dependents Distribution")
         fig, ax = plt.subplots(figsize=(5,3))
-        sns.countplot(data=df, x="region", ax=ax)
+        sns.countplot(data=df, x="dependents", ax=ax)
         st.pyplot(fig)
 
-
-    # Third row (heatmap full width)
     st.subheader("Correlation Heatmap")
 
     fig, ax = plt.subplots(figsize=(6,4))
-    sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", ax=ax)
+    sns.heatmap(df.corr(numeric_only=True), annot=True,
+                cmap="coolwarm", ax=ax)
     st.pyplot(fig)
 
 
@@ -169,22 +155,21 @@ elif page == "Bulk Prediction":
 
     st.title("Bulk Insurance Charges Prediction")
     st.markdown("---")
-    
+
     required_columns = [
         "age",
         "bmi",
-        "children",
+        "dependents",
         "sex",
-        "smoker",
-        "region"
+        "smoker"
     ]
 
     st.download_button(
-    "📥 Download Sample CSV Template",
-    "age,bmi,children,sex,smoker,region\n30,25,1,male,no,northeast",
-    "insurance.csv"
+        "📥 Download Sample CSV Template",
+        "age,bmi,dependents,sex,smoker\n30,25,1,male,no",
+        "insurance_sample.csv"
     )
-    
+
     uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
     if uploaded_file:
@@ -194,10 +179,8 @@ elif page == "Bulk Prediction":
         st.subheader("Uploaded Dataset Preview")
         st.dataframe(data.head())
 
-        # Convert column names to lowercase
         data.columns = data.columns.str.lower()
 
-        # Check missing columns
         missing_cols = [
             col for col in required_columns
             if col not in data.columns
@@ -211,10 +194,8 @@ elif page == "Bulk Prediction":
 
         else:
 
-            # Ignore extra columns safely
             data = data[required_columns]
 
-            # Encoding categorical variables
             data["sex_male"] = data["sex"].apply(
                 lambda x: 1 if x == "male" else 0
             )
@@ -223,45 +204,28 @@ elif page == "Bulk Prediction":
                 lambda x: 1 if x == "yes" else 0
             )
 
-            data["region_northwest"] = data["region"].apply(
-                lambda x: 1 if x == "northwest" else 0
-            )
-
-            data["region_southeast"] = data["region"].apply(
-                lambda x: 1 if x == "southeast" else 0
-            )
-
-            data["region_southwest"] = data["region"].apply(
-                lambda x: 1 if x == "southwest" else 0
-            )
+            data["bmi_age"] = data["bmi"] * data["age"]
 
             input_data = data[[
                 "age",
                 "bmi",
-                "children",
+                "dependents",
+                "bmi_age",
                 "sex_male",
-                "smoker_yes",
-                "region_northwest",
-                "region_southeast",
-                "region_southwest"
+                "smoker_yes"
             ]]
 
             predictions = model.predict(input_data)
 
-            data["predicted_charges"] = predictions
+            data["Predicted Charges"] = predictions
 
-            st.success("Predictions completed successfully")
-
+            st.subheader("Prediction Results")
             st.dataframe(data)
 
             csv = data.to_csv(index=False)
 
             st.download_button(
-                "Download Predictions CSV",
+                "📥 Download Results CSV",
                 csv,
-                "predicted_results.csv",
-                "text/csv"
+                "predictions.csv"
             )
-
-st.markdown("---")
-st.caption("Developed by Vashisht Rajpurohit | Machine Learning Deployment Project")
